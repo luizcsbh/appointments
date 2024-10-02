@@ -1,9 +1,15 @@
+# config/packages/nelmio_cors.yaml
 nelmio_cors:
     defaults:
-        allow_origin: ['*']
-        allow_headers: ['Content-Type', 'Authorization']
-        allow_methods: ['GET', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE']
-        expose_headers: []
+        allow_origin: ['http://localhost:3000']  # Defina a origem permitida, no caso seu frontend em localhost
+        allow_credentials: true
+        allow_headers: ['Content-Type', 'Authorization']  # Defina os headers permitidos
+        allow_methods: ['GET', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE']  # Métodos HTTP permitidos
+        expose_headers: ['Link', 'X-Custom-Header']  # Defina os headers que podem ser expostos
         max_age: 3600
     paths:
-        '^/api/': ~
+        '^/api/':
+            allow_origin: ['http://localhost:3000']  # Defina o caminho que permite requisições do frontend
+            allow_headers: ['Content-Type', 'Authorization']
+            allow_methods: ['GET', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE']
+            max_age: 3600

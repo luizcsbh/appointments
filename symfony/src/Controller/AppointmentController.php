@@ -18,94 +18,78 @@ class AppointmentController extends AbstractController
     }
 
     /**
-     * @Route("/api/appointments", methods={"GET"})
-     * 
-     * Returns a list of all appointments.
-     *
-     * @return Response
+     * @Route("/api/appointments", name="index", methods={"GET"})
      */
-    public function getAppointments(): Response
+    public function index(): Response
     {
         $appointments = $this->entityManager->getRepository(Appointment::class)->findAll();
-        return $this->json($appointments);
+        return $this->json([
+            'data' => $appointments
+        ], Response::HTTP_OK);
     }
 
     /**
-     * @Route("/api/appointments", methods={"POST"})
-     * 
-     * Creates a new appointment.
-     * 
-     * Expects a JSON payload with the following structure:
-     * {
-     *     "date": "YYYY-MM-DD",
-     *     "description": "string"
-     * }
-     *
-     * @param Request $request
-     * @return Response
+     * @Route("/api/appointments/{id}", name="show",  methods={"GET"})
      */
-    public function createAppointment(Request $request): Response
+    public function show(int $id): Response
     {
-        $data = json_decode($request->getContent(), true);
+        $appointment = $this->entityManager->getRepository(Appointment::class)->find($id);
+
+        if (!$appointment) {
+            return $this->json([
+                'error' => 'Appointment not found'
+            ], Response::HTTP_NOT_FOUND
+            );
+        }
+
+        return $this->json([
+            'data' => $appointment
+            ], Response::HTTP_OK
+        );
+    }
+
+
+    /**
+     * @Route("/api/appointments", name="create", methods={"POST"})
+     */
+    public function create(Request $request): Response
+    {
+        $data = $request->request->all();
         
         if (!isset($data['date'])) {
-            return $this->json(['error' => 'Date is required'], Response::HTTP_BAD_REQUEST);
+            return $this->json([
+                'error' => 'Date is required'
+                ], Response::HTTP_BAD_REQUEST
+            );
         }
 
         $appointment = new Appointment();
         $appointment->setDate(new \DateTime($data['date']));
-
-        if (isset($data['description'])) {
-            $appointment->setDescription($data['description']);
-        }
+        $appointment->setDescription($data['description']);
 
         $this->entityManager->persist($appointment);
         $this->entityManager->flush();
 
-        return $this->json($appointment, Response::HTTP_CREATED);
+        return $this->json([
+            'data' => 'Appointment criado com sucesso!'
+            ], Response::HTTP_CREATED
+        );
     }
 
     /**
-     * @Route("/api/appointments/{id}", methods={"GET"})
-     * 
-     * Returns a specific appointment by ID.
-     *
-     * @param int $id
-     * @return Response
+     * @Route("/api/appointments/{id}", name="update", methods={"PUT", "PATCH"})
      */
-    public function getAppointment(int $id): Response
+    public function update(Request $request, int $id): Response
     {
-        $appointment = $this->entityManager->getRepository(Appointment::class)->find($id);
 
-        if (!$appointment) {
-            return $this->json(['error' => 'Appointment not found'], Response::HTTP_NOT_FOUND);
-        }
-
-        return $this->json($appointment);
-    }
-
-    /**
-     * @Route("/api/appointments/{id}", methods={"PUT"})
-     * 
-     * Updates an existing appointment by ID.
-     * 
-     * Expects a JSON payload with optional properties:
-     * {
-     *     "date": "YYYY-MM-DD",
-     *     "description": "string"
-     * }
-     *
-     * @param Request $request
-     * @param int $id
-     * @return Response
-     */
-    public function updateAppointment(Request $request, int $id): Response
-    {
         $data = json_decode($request->getContent(), true);
         $appointment = $this->entityManager->getRepository(Appointment::class)->find($id);
 
         if (!$appointment) {
-            return $this->json(['error' => 'Appointment not found'], Response::HTTP_NOT_FOUND);
+            return $this->json([
+                    'error' => 'Appointment not found'
+                ], Response::HTTP_NOT_FOUND
+            );
         }
 
         if (isset($data['date'])) {
@@ -118,28 +102,32 @@ class AppointmentController extends AbstractController
 
         $this->entityManager->flush();
 
-        return $this->json($appointment);
+        return $this->json([
+                'data' => $appointment
+            ], Response::HTTP_OK
+        );
     }
 
     /**
-     * @Route("/api/appointments/{id}", methods={"DELETE"})
-     * 
-     * Deletes a specific appointment by ID.
-     *
-     * @param int $id
-     * @return Response
+     * @Route("/api/appointments/{id}", name="delete", methods={"DELETE"})
      */
-    public function deleteAppointment(int $id): Response
+    public function delete(int $id): Response
     {
         $appointment = $this->entityManager->getRepository(Appointment::class)->find($id);
 
         if (!$appointment) {
-            return $this->json(['error' => 'Appointment not found'], Response::HTTP_NOT_FOUND);
+            return $this->json([
+                    'error' => 'Appointment not found'
+                ], Response::HTTP_NOT_FOUND
+            );
         }
 
         $this->entityManager->remove($appointment);
         $this->entityManager->flush();
 
-        return $this->json(['message' => 'Appointment deleted'], Response::HTTP_NO_CONTENT);
+        return $this->json([
+                'message' => 'Appointment deleted'
+            ], Response::HTTP_NO_CONTENT
+        );
     }
 }
