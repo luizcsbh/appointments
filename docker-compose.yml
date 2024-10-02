@@ -1,0 +1,66 @@
+version: '3.7'
+
+services:
+  nextjs:
+    image: node:18
+    working_dir: /app/nextjs
+    volumes:
+      - ./nextjs:/app/nextjs
+    ports:
+      - '3000:3000'
+    command: sh -c "npm install && npm run dev"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000/api/appointments
+    depends_on:
+      - symfony
+      - mariadb
+    networks:
+      my_network:
+        ipv4_address: 172.21.0.2  # Novo IP fixo para o Next.js
+
+  symfony:
+    build:
+      context: ./symfony
+      dockerfile: Dockerfile
+    container_name: symfony
+    working_dir: /app/symfony
+    volumes:
+      - ./symfony:/app/symfony
+    ports:
+      - '8000:8000'
+    command: sh -c "composer install --no-interaction && php -S 0.0.0.0:8000 -t public"
+    environment:
+      DATABASE_URL: mysql://root:databaseadmin@mariadb:3306/symfony
+    depends_on:
+      - mariadb
+    networks:
+      my_network:
+        ipv4_address: 172.21.0.3  # Novo IP fixo para o Symfony
+
+  mariadb:
+    image: mariadb
+    container_name: mariadb
+    environment:
+      MARIADB_ROOT_PASSWORD: databaseadmin
+      MYSQL_DATABASE: symfony
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost --password=databaseadmin"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+    networks:
+      my_network:
+        ipv4_address: 172.21.0.4  # Novo IP fixo para o MariaDB
+
+volumes:
+  mariadb_data:
+
+networks:
+  my_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16  # Nova sub-rede
