@@ -87,6 +87,6 @@ Antes de excluir um compromisso, o sistema exibe um modal de confirmação, evit
 
 Desenvolvido por Luiz Santos.
 
-	[LinkedIn:](https://www.linkedin.com/in/luizcsbh/)
+	[![LinkedIn:](https://www.linkedin.com/in/luizcsbh/)](https://www.linkedin.com/in/luizcsbh/)
 	[GitHub:](https://github.com/luizcsbh)
 	[E-mail:](luizcsdev@gmail.com)
