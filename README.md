@@ -29,34 +29,38 @@ Este é um projeto desenvolvido em **Next.js** para gerenciar compromissos, que 
 ### Clonar o repositório
 
 ```bash
-git clone https://github.com/username/appointments-manager.git
-cd appointments-manager
+git clone https://github.com/luizcsbh/appointments.git
+cd appointments
 ```
-### 1 Backend (Symfony)
+### 1. Backend (Symfony)
 
-	1.1	Acesse o diretório api/ e instale as dependências:
+####	1.1	Acesse o diretório api/ e instale as dependências:
+
 ```bash
 cd api
 composer install
 ```
-    1.2	Inicie o servidor do Symfony com Docker:
+####    1.2	Inicie o servidor do Symfony com Docker:
+    
 ```bash
 docker-compose up -d
 ```
-	1.3	O servidor Symfony estará disponível em http://localhost:8000.
+####	1.3	O servidor Symfony estará disponível em http://localhost:8000.
 
-### 2 Frontend (Next.js)
+### 2. Frontend (Next.js)
 
-	2.1	Acesse o diretório frontend/ e instale as dependências:
+####	2.1	Acesse o diretório frontend/ e instale as dependências:
+
 ```bash
 cd frontend
 npm install
 ```
-    2.2	Inicie o servidor de desenvolvimento:
+ ####   2.2	Inicie o servidor de desenvolvimento:
+
 ```bash
 npm run dev
 ```
-    2.3	O frontend estará disponível em http://localhost:3000.
+####    2.3	O frontend estará disponível em http://localhost:3000.
 
 ### Banco de Dados
 
@@ -66,7 +70,7 @@ O banco de dados MariaDB será iniciado automaticamente via Docker utilizando o 
 	•	Senha: rootadmin
 
 
-API Endpoints
+#API Endpoints
 
 A aplicação realiza chamadas para a API do Symfony para gerenciar compromissos. Os principais endpoints são:
 
@@ -83,6 +87,6 @@ Antes de excluir um compromisso, o sistema exibe um modal de confirmação, evit
 
 Desenvolvido por Luiz Santos.
 
-	•	[![LinkedIn:] (https://www.linkedin.com/in/luizcsbh/)]
-	•	[![GitHub:] (https://github.com/luizcsbh)]
-	•	[![E-mail:] (luizcsdev@gmail.com)]
+	[LinkedIn: (https://www.linkedin.com/in/luizcsbh/)]
+	[[GitHub:] (https://github.com/luizcsbh)]
+	[[E-mail:] (luizcsdev@gmail.com)]
